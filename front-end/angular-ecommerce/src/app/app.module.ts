@@ -9,11 +9,13 @@ import { ProductService } from './services/product.service';
 import { Route, RouterModule } from '@angular/router';
 import { ProductCategoryMenuComponent } from './components/product-category-menu/product-category-menu.component';
 import { SearchComponent } from './components/search/search.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 const routes : Route[] =[
   {path: 'category/:id', component: ProductListComponent}, //Here the user clicks on the link where if the path as category/id then it creates instance of ProductListComponent
   {path: 'category', component: ProductListComponent},
   {path: 'products', component: ProductListComponent},
+  {path: 'products/:id', component: ProductDetailComponent},
   {path: 'category/:id', redirectTo:'/products', pathMatch:'full'},
   {path: 'search/:keyword', component: ProductListComponent},
   {path: '**', redirectTo:'/products', pathMatch:'full'},
@@ -23,7 +25,8 @@ const routes : Route[] =[
     AppComponent,
     ProductListComponent,
     ProductCategoryMenuComponent,
-    SearchComponent
+    SearchComponent,
+    ProductDetailComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
