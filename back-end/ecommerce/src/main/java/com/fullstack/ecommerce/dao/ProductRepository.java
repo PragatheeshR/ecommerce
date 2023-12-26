@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@CrossOrigin("http://localhost:4200") // this is to allow request from different port calls
+@CrossOrigin("https://localhost:4200") // this is to allow request from different port calls
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByCategoryId(@Param("id") Long id,  Pageable pageable);

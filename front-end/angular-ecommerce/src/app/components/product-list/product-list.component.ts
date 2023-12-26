@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -12,9 +14,17 @@ export class ProductListComponent implements OnInit {
 
   products : Product[] = [];
   categoryId : number = 1;
+  previousCategoryId : number = 1;
   searchMode: boolean = false;
 
-  constructor(private productService : ProductService, private route : ActivatedRoute) { }
+  //for pagination
+
+  thePageNumber : number = 1;
+  thePageSize : number = 10
+  theTotalElements : number = 0;
+
+
+  constructor(private productService : ProductService, private route : ActivatedRoute, private cartService : CartService) { }
 
   // acts like a PostConstruct Method
   ngOnInit(): void {
@@ -31,9 +41,16 @@ export class ProductListComponent implements OnInit {
     if(this.searchMode){
       this.handleSearchProducts();
     }
+  
     else{
     this.handelListProducts();
     }
+  }
+
+  updatePageSize(pageSize : string){
+      this.thePageNumber = 1;
+      this.thePageSize = +pageSize;
+      this.listProducts();
   }
 
 
@@ -41,9 +58,14 @@ export class ProductListComponent implements OnInit {
 
      const keyword = this.route.snapshot.paramMap.get("keyword");
 
-     this.productService.getSearchedProducts(keyword).subscribe(
+     this.productService.getSearchedProducts(keyword,this.thePageNumber - 1, this.thePageSize).subscribe(
       data => {
-        this.products = data;
+          console.log("Products value"+ JSON.stringify(data));
+            this.products = data._embedded.products;
+            console.log("Products value"+ JSON.stringify(data._embedded.products));
+            this.thePageNumber = data.page.number + 1;
+            this.thePageSize = data.page.size;
+            this.theTotalElements = data.page.totalElements;
       }
      );
   }
@@ -59,14 +81,38 @@ export class ProductListComponent implements OnInit {
       this.categoryId = 1;
     }
 
+    //if we have diff category compared to previous one, then set pageNumber = 1 as we need to show products for that category from start
+
+    if(this.previousCategoryId != this.categoryId){
+      this.thePageNumber = 1;
+    }
+
+    this.previousCategoryId = this.categoryId;
+    console.log(this.categoryId, this.previousCategoryId);
+
+
     //now get the products for given category id
 
-      this.productService.getProductList(this.categoryId).subscribe(
+      this.productService.getProductListPagination(this.categoryId, this.thePageNumber - 1, this.thePageSize).subscribe(
           data => {
-            this.products = data;
+            console.log("Categories value"+ JSON.stringify(data));
+            this.products = data._embedded.products;
+            this.thePageNumber = data.page.number + 1;
+            this.thePageSize = data.page.size;
+            this.theTotalElements = data.page.totalElements;
           }
       );
 
+  }
+
+  addToCart(product : Product){
+      console.log(`${product.name} price : ${product.unitPrice}`);
+      let cartItem : CartItem = new CartItem(product);
+
+      this.cartService.addToCart(cartItem);
+      console.log("Added to Cart Successfully in Product LIST component");
+
+      
   }
 
 }

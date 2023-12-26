@@ -1,0 +1,76 @@
+<div class="main-content">
+    <div *ngIf="cartItems.length > 0">
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Name</th>
+                <th scope="col"></th>
+              </tr>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let cartItem of cartItems">
+                <td>
+                    <img src="{{cartItem.imageURL}}" width="200" height="500">
+                </td>
+                <td>{{cartItem.name}}</td>
+                <td>
+                    <div class="items">
+                        <label>Quantity:</label>
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <button (click)="addToCart(cartItem)" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+
+                            </div>
+                            
+                            <div class="col ml-4 ml-2">
+                                {{cartItem.quantity}}
+                            </div>
+
+                            <div class="col">
+                                <div *ngIf="cartItem.quantity > 0">
+                                <button (click)="removeFromCart(cartItem)"  class="btn btn-primary btn-sm">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+
+                            </div>
+                        </div>
+                        <button (click)="remove(cartItem)"  class="btn btn-primary btn-sm mt-2">
+                            Remove
+                        </button>
+
+
+                    </div>
+                    <!-- Quantity: {{cartItem.quantity}}<br> -->
+                    Sub Cost : {{cartItem.unitPrice * cartItem.quantity | currency:'INR'}}
+                </td>
+
+            </tr>
+            <tr>
+            <td></td>
+            <td></td>
+            <td>
+                Total Quantity: {{totalQty}}<br>
+                Total Cost    : {{totalPrice}}<br>
+                Shipping Cost : Free<br>
+                
+                <b>Total : {{totalPrice}}</b>    
+                <br>  
+                <a routerLink="/checkout"  class="btn btn-primary mt-2">Checkout</a>
+                <!-- <button (click)="remove(cartItem)"  class="btn btn-primary btn-sm mt-2">
+                    Remove
+                </button> -->
+            </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+<div *ngIf="cartItems.length == 0" class="alert alert-warning col-md-12" role="alert">
+    Cart is Empty
+</div>
+</div>

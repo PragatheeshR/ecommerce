@@ -1,0 +1,280 @@
+<div class="main-content page-m">
+<div class="section-content section-content-p30">
+    <div class="container-fluid">
+        <form [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()">
+            <!-- cuctomer form group -->
+            <div formGroupName="customer" class="form-area">
+                <h3>Customer</h3>
+                <div class="row">
+                    <div class="col-md-2"><label>First Name</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="firstName" type="text">
+                                <div *ngIf="firstName.invalid  && (firstName.dirty || firstName.touched)" class="alert alert-danger mt-1">
+                                    <div *ngIf="firstName.errors.required || firstName.errors.notOnlyWhiteSpace">
+                                        First Name should not be empty
+
+                                    </div>
+
+                                    <div *ngIf="firstName.errors.minlength">
+                                        First Name should atleast 3 characters
+
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Last Name</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="lastName" type="text">
+                            <div *ngIf="lastName.invalid  && (lastName.dirty || lastName.touched)" class="alert alert-danger mt-1">
+                                <div *ngIf="lastName.errors.required || lastName.errors.notOnlyWhiteSpace">
+                                    Last Name should not be empty
+
+                                </div>
+
+                                <div *ngIf="lastName.errors.minlength">
+                                    Last Name should atleast 3 characters
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Email</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="email" type="text">
+                            <div *ngIf="email.invalid  && (email.dirty || email.touched)" class="alert alert-danger mt-1">
+                                <div *ngIf="email.errors.required">
+                                    Email should not be empty
+
+                                </div>
+
+                                <div *ngIf="email.errors.pattern">
+                                    Enter Valid email address
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div formGroupName="shippingAddress" class="form-area">
+                <h3>Shipping Address</h3>
+                <div class="row">
+                    <div class="col-md-2"><label>Street</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="street" type="text" placeholder="No: 9/115">
+                            <div *ngIf="shippingAddressStreet.invalid  && (shippingAddressStreet.dirty || shippingAddressStreet.touched)" class="alert alert-danger mt-1">
+                                <div *ngIf="shippingAddressStreet.errors.required || shippingAddressStreet.errors.notOnlyWhiteSpace">
+                                    Street Name should not be empty
+
+                                </div>
+
+                                <div *ngIf="shippingAddressStreet.errors.maxlength">
+                                    Street Name should be max 10 characters
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>City</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="city" type="text">
+                            <div *ngIf="shippingAddressCity.invalid  && (shippingAddressCity.dirty || shippingAddressCity.touched)" class="alert alert-danger mt-1">
+                                <div *ngIf="shippingAddressCity.errors.required || shippingAddressCity.errors.notOnlyWhiteSpace">
+                                    City Name should not be empty
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>State</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <select formControlName="state">
+                                <option *ngFor="let state of shippingAddressStates" [ngValue]="state">
+                                    {{state.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Country</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <select formControlName="country"  (change)="getStates('shippingAddress')">
+                                <option *ngFor="let country of countries" [ngValue]="country">
+                                    {{country.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>ZipCode</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="zipCode" type="text">
+                            <div *ngIf="shippingAddressZipCode.invalid  && (shippingAddressZipCode.dirty || shippingAddressZipCode.touched)" class="alert alert-danger mt-1">
+                                <div *ngIf="shippingAddressZipCode.errors.required">
+                                    ZipCode should not be empty
+
+                                </div>
+
+                                <div *ngIf="shippingAddressZipCode.errors.pattern">
+                                    ZipCode should  of length 6
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="input-space">
+                <label class="au-checkbox">
+                    
+                    <input type="checkbox" (change)="copyShippingAddrToBillingAddr($event)" >
+                    <span class="au-checkmark"></span>Copy Shipping Address
+                </label>
+                
+
+            </div>
+
+            <div formGroupName="billingAddress" class="form-area">
+                <h3>Billing Address</h3>
+                <div class="row">
+                    <div class="col-md-2"><label>Street</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="street" type="text" placeholder="No: 9/115">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>City</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="city" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>State</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <select formControlName="state">
+                                <option *ngFor="let state of billingAddressStates" [ngValue]="state">
+                                    {{state.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Country</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <select formControlName="country"  (change)="getStates('billingAddress')">
+                                <option *ngFor="let country of countries" [ngValue]="country">
+                                    {{country.name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>ZipCode</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="zipCode" type="text">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div formGroupName="creditCardDetails" class="form-area">
+                <h3>Credit Card Details</h3>
+                <div class="row">
+                    <div class="col-md-2"><label>Card Type</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="cardType" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Card Number</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="cardNumber" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>CVV</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="cvv" type="password" size="3" maxlength="3" minlength="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2"><label>Expiry Date</label></div>
+                    <div class="col-md-9">
+                        <div class="input-space">
+                            <input formControlName="expDate" type="text">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-area">
+                <h3>Review Your Order</h3>
+
+                <p>Total Quatity : {{totalQty}}</p>
+                <p>Shipping      : Free</p>
+                <p>Total Amount  : {{totalPrice | currency:'INR'}}</p>
+            </div>
+
+
+            <div class="text-center">
+                <button type="submit"  class="btn btn-info">Purchase</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</div>
