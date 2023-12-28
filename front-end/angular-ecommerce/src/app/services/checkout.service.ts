@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Purchase } from '../common/purchase';
 import { environment } from 'src/environments/environment';
+import { PaymentInfo } from '../common/payment-info';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class CheckoutService {
 
   private purchaseURL =  environment.baseBackEndUrl+"/checkout/purchase";
+  private initentUrl = environment.baseBackEndUrl+"/checkout/payment-intent";
 
   constructor(private httpClient : HttpClient){
 
@@ -26,6 +28,10 @@ export class CheckoutService {
 
 
     return this.httpClient.post<Purchase>(this.purchaseURL, purchase);
+  }
+
+  createPaymentIntent(paymentInfo : PaymentInfo) : Observable<any>{
+      return this.httpClient.post<PaymentInfo>(this.initentUrl, paymentInfo);
   }
 
 }

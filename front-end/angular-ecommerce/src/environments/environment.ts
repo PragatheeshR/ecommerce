@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseBackEndUrl: 'https://localhost:8443/api'
+  baseBackEndUrl: 'https://localhost:8443/api',
+  stripePublishableKey: 'pk_test_51OSF57SGthlHcJbM8GA6yce4QZH0CyqeJszX51YAvKgRB1aB9lml5YvjZSQTGsNGhCJS7XJpKnRvRjQxqNkP5Jp200H7YWPgYe'
 
 };
 
